@@ -27,6 +27,37 @@ const convertToJst = (utcDate: Date) => {
   return date.toLocaleString();
 };
 
+const dummy_reviewers = [
+  {
+    avatar_url: "https://avatars.githubusercontent.com/u/54141439?v=4",
+    html_url: "https://github.com/satoshi-i-botlogy",
+    login: "dummy",
+    type: "User",
+    url: "https://api.github.com/users/satoshi-i-botlogy",
+  },
+  {
+    avatar_url: "https://avatars.githubusercontent.com/u/54141439?v=4",
+    html_url: "https://github.com/satoshi-i-botlogy",
+    login: "dummy",
+    type: "User",
+    url: "https://api.github.com/users/satoshi-i-botlogy",
+  },
+  {
+    avatar_url: "https://avatars.githubusercontent.com/u/54141439?v=4",
+    html_url: "https://github.com/satoshi-i-botlogy",
+    login: "dummy",
+    type: "User",
+    url: "https://api.github.com/users/satoshi-i-botlogy",
+  },
+  {
+    avatar_url: "https://avatars.githubusercontent.com/u/54141439?v=4",
+    html_url: "https://github.com/satoshi-i-botlogy",
+    login: "dummy",
+    type: "User",
+    url: "https://api.github.com/users/satoshi-i-botlogy",
+  },
+];
+
 export function AppRoot() {
   const [pulls, setPulls] = useState<object[]>([]);
 
@@ -41,6 +72,10 @@ export function AppRoot() {
           },
         })
         .then((res) => {
+          res.data[3].requested_reviewers = [
+            res.data[3].requested_reviewers,
+            ...dummy_reviewers,
+          ];
           setPulls((pulls) => pulls.concat(res.data));
         })
         .catch((e) => console.log(e));
@@ -48,7 +83,7 @@ export function AppRoot() {
   }, []);
 
   return (
-    <Grid container sx={{ width: "500px" }}>
+    <Grid container>
       <Grid item xs={8} sx={{ justifyContent: "flex-start", display: "flex" }}>
         <Typography
           variant="h1"
@@ -73,7 +108,7 @@ export function AppRoot() {
                   </Tooltip>
                   <Box
                     sx={{
-                      width: "500px",
+                      width: "350px",
                       textOverflow: "ellipsis",
                       overflow: "hidden",
                       whiteSpace: "nowrap",
@@ -91,7 +126,7 @@ export function AppRoot() {
                       <span> created at {convertToJst(pull.created_at)}</span>
                     </StyledParagraph>
                   </Box>
-                  <AvatarGroup max={3}>
+                  <AvatarGroup max={4}>
                     {pull.requested_reviewers.length > 0 &&
                       pull.requested_reviewers.map(
                         (reviewer: any, i: number) => (
