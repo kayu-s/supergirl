@@ -5,7 +5,6 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import MuiSwitch from "../../../components/atoms/MuiSwitch";
 import { OptionsModule } from "../../store/modules/options-module";
 import { connect } from "react-redux";
 import { RootState } from "../../store/store";
@@ -27,17 +26,9 @@ export const Header = ({ darkMode }: Types.OptionsProps) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Saturn | Settings
+            Super girl | Settings
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <MuiSwitch
-              prevLabel={labelText}
-              nextLabel={labelText}
-              dispatchEvent={OptionsModule.actions.changeTheme}
-              checked={darkMode}
-            />
-          </Box>
         </Toolbar>
       </AppBar>
     </Box>

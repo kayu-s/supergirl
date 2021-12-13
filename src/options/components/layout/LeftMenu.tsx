@@ -10,11 +10,7 @@ import Toolbar from "@mui/material/Toolbar";
 import HomeIcon from "@mui/icons-material/Home";
 import SendIcon from "@mui/icons-material/Send";
 import BusinessIcon from "@mui/icons-material/Business";
-import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
-import { Telework } from "../../components/Telework";
-import { Administrator } from "../../components/Administrator";
 import { Router, Route, Switch } from "react-router-dom";
-import { Fam } from "../../components/Fam";
 import { createMemoryHistory } from "history";
 import { Home } from "../Home";
 const history = createMemoryHistory();
@@ -47,38 +43,6 @@ export function LeftMenu(props: Props) {
             <HomeIcon />
           </ListItemIcon>
           <ListItemText primary="Home" />
-        </ListItem>
-        <ListItem
-          button
-          key="Telework"
-          onClick={() => history.push("/telework")}
-        >
-          <ListItemIcon>
-            <SendIcon />
-          </ListItemIcon>
-          <ListItemText primary="Telework" />
-        </ListItem>
-        <ListItem
-          disabled
-          button
-          key="FAM"
-          onClick={() => history.push("/fam")}
-        >
-          <ListItemIcon>
-            <BusinessIcon />
-          </ListItemIcon>
-          <ListItemText primary="FAM" />
-        </ListItem>
-        <ListItem
-          disabled
-          button
-          key="Administrator"
-          onClick={() => history.push("/administrator")}
-        >
-          <ListItemIcon>
-            <SupervisedUserCircleIcon />
-          </ListItemIcon>
-          <ListItemText primary="Administrator" />
         </ListItem>
       </List>
     </Router>
@@ -141,9 +105,6 @@ export function LeftMenu(props: Props) {
         <Router history={history}>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route path="/telework" component={Telework} />
-            <Route path="/fam" component={Fam} />
-            <Route path="/administrator" component={Administrator} />
           </Switch>
         </Router>
       </Box>

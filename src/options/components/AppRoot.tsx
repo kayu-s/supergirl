@@ -30,7 +30,10 @@ const getDesignTokens = (mode: PaletteMode) => ({
 export const AppRoot = ({ darkMode }: Types.OptionsProps) => {
   const mode = darkMode ? "dark" : "light";
 
-  const theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
+  const theme = React.useMemo(
+    () => createTheme(getDesignTokens("light")),
+    ["light"]
+  );
 
   return (
     <ThemeProvider theme={theme}>
