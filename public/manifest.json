@@ -2,7 +2,7 @@
   "name": "supergirl",
   "version": "1.0.0",
   "manifest_version": 3,
-  "description": "Job automation Chrome Extension",
+  "description": "Make it easy to use GitHub",
   "icons": {
     "16": "icons/supergirl@2x.png",
     "48": "icons/supergirl@2x.png",
@@ -11,18 +11,8 @@
   "background": {
     "service_worker": "background.js"
   },
-  "content_scripts": [
-    {
-      "matches": [
-        "https://www.honsha.fsi.co.jp/cws/*",
-        "https://intra.famoffice.jp/*",
-        "https://login.microsoftonline.com/*"
-      ],
-      "js": ["content_script.js"]
-    }
-  ],
   "options_page": "options.html",
-  "permissions": ["storage", "scripting", "tabs"],
+  "permissions": ["storage"],
   "action": {
     "default_popup": "popup.html"
   }
