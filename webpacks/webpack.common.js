@@ -14,13 +14,9 @@ const entryPath = (names) => {
 };
 
 module.exports = {
-  // entry: entryPath(["background", "content_script", "options", "popup"]),
   entry: {
     popup: path.join(srcDir, "popup/popup.tsx"),
     options: path.join(srcDir, "options/options.tsx"),
-    background: path.join(srcDir, "background/background.ts"),
-    content_script: path.join(srcDir, "content_script/content_script.ts"),
-    app_script: path.join(srcDir, "content_script/app_script.tsx"),
   },
   output: {
     filename: "[name].js",

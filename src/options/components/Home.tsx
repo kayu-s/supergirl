@@ -1,102 +1,128 @@
 import {
+  Checkbox,
   Container,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
   Grid,
-  IconButton,
-  TextField,
+  Input,
+  InputAdornment,
+  InputLabel,
   Typography,
 } from "@mui/material";
+import KeyIcon from "@mui/icons-material/Key";
 import React, { useEffect, useState } from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { axiosBase } from "../../commons/axios";
 
-const getInitialState = async () => {
-  let state: string[] = [];
-  chrome.storage.sync.get(["repositories"], (result) => {
-    state = result["repositories"];
-  });
-  return state;
+type Repository = {
+  isShow: boolean;
+  name: string;
 };
 
-const storedState = await getInitialState();
-const initialState: string[] =
-  storedState.length > 0 ? storedState : ["Botlogy/botlogy", "kayu-s/practice"];
+const setInitialRepositories = (response: object[], storages: Repository[]) => {
+  return response.map((repo: any) => {
+    const index = storages?.find((v: any) => v?.name === repo.full_name);
+    return {
+      name: repo.full_name,
+      isShow: index?.name ? index?.isShow : true,
+    };
+  });
+};
+
+const setUpdatedRepository = (
+  repos: Repository[],
+  name: string,
+  checked: boolean
+) => {
+  return repos.map((repo: Repository) =>
+    repo.name === name ? { name: name, isShow: checked } : repo
+  );
+};
 
 export const Home = () => {
-  const [repos, setRepos] = useState<string[]>(initialState);
+  const [repos, setRepos] = useState<Repository[]>([]);
+  const [token, setToken] = useState<string>();
+
   useEffect(() => {
-    chrome.storage.sync.set({ repositories: repos }, () => {});
-  }, [repos]);
-
-  const handleSave = (e: any) => {
-    console.log(repos);
-  };
-
-  const validator = (e: any): boolean => {
-    return (
-      e.keyCode === 13 &&
-      !repos.includes(e.target.value) &&
-      e.target.value !== ""
-    );
-  };
-
-  const handleDelete = (deleteRepo: string) => {
-    chrome.storage.sync.get(["repositories"], (result) => {
-      const updatedRepos = result["repositories"].filter(
-        (repo: string) => repo !== deleteRepo
-      );
-      chrome.storage.sync.set({ repositories: updatedRepos }, () => {});
+    chrome.storage.local.get("token", (result) => {
+      setToken(result["token"]);
+      axiosBase(result["token"])
+        .get(`user/repos`)
+        .then((res) => {
+          chrome.storage.sync.get(["repositories"], (result) => {
+            setRepos(setInitialRepositories(res.data, result["repositories"]));
+            chrome.storage.sync.set({
+              repositories: setInitialRepositories(
+                res.data,
+                result["repositories"]
+              ),
+            });
+          });
+        })
+        .catch((e) => console.log(e));
     });
-    setRepos(repos.filter((repo) => repo !== deleteRepo));
-    console.log(repos);
+  }, [token]);
+  const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRepos(setUpdatedRepository(repos, e.target.name, e.target.checked));
+    chrome.storage.sync.set({
+      repositories: setUpdatedRepository(
+        repos,
+        e.target.name,
+        e.target.checked
+      ),
+    });
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setToken(e.target.value);
+    chrome.storage.local.set({ token: e.target.value });
   };
 
   return (
     <Container maxWidth="md">
       <Typography variant="h3" gutterBottom>
-        My repositories
+        Repository settings
       </Typography>
-      {repos.map((repo, i) => (
+      <Grid container spacing={4}>
+        <Grid item xs>
+          <FormControl variant="standard">
+            <InputLabel htmlFor="input-with-icon-adornment">
+              Personal access token
+            </InputLabel>
+            <Input
+              id="input-with-icon-adornment"
+              startAdornment={
+                <InputAdornment position="start">
+                  <KeyIcon />
+                </InputAdornment>
+              }
+              onChange={handleChange}
+              defaultValue={token}
+              value={token}
+              type="password"
+              sx={{ width: "300px", marginBottom: "15px" }}
+            />
+          </FormControl>{" "}
+        </Grid>
+      </Grid>
+      {repos.map((repo: Repository) => (
         <Grid container spacing={4} sx={{ marginBottom: 2 }}>
           <Grid item xs>
-            <TextField
-              disabled
-              key={i}
-              name={i.toString()}
-              label="organization/repository"
-              fullWidth
-              defaultValue={repo}
-              variant="outlined"
-            />
-          </Grid>
-          <Grid item xs>
-            <IconButton
-              aria-label="delete"
-              onClick={handleDelete.bind(this, repo)}
-            >
-              <DeleteIcon />
-            </IconButton>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name={repo.name}
+                    onChange={handleCheck}
+                    defaultChecked={repo.isShow}
+                  />
+                }
+                label={repo.name}
+              />
+            </FormGroup>
           </Grid>
         </Grid>
       ))}
-      <Grid container spacing={4} sx={{ marginBottom: 2 }}>
-        <Grid item xs>
-          <TextField
-            label="organization/repository"
-            fullWidth
-            variant="outlined"
-            placeholder="microsoft/TypeScript"
-            onKeyDown={(e: any) => {
-              if (validator(e)) {
-                setRepos([...repos, e.target.value]);
-                e.target.value = "";
-              }
-            }}
-          />
-        </Grid>
-        <Grid item xs></Grid>
-      </Grid>
-      <button type="submit" onClick={handleSave}>
-        save
-      </button>
     </Container>
   );
 };

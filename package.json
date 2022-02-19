@@ -27,7 +27,7 @@
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@material-ui/pickers": "^3.3.10",
-    "@mui/icons-material": "^5.0.0-rc.1",
+    "@mui/icons-material": "^5.2.4",
     "@mui/lab": "^5.0.0-alpha.46",
     "@mui/material": "^5.0.0-rc.1",
     "@reduxjs/toolkit": "^1.6.2",

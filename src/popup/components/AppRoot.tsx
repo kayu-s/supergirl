@@ -11,9 +11,8 @@ import {
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Box, styled } from "@mui/system";
-const TOKEN = "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";
+import { axiosBase } from "../../commons/axios";
 
 const StyledParagraph = styled("p")({
   margin: 0,
@@ -56,34 +55,37 @@ const dummy_reviewers = [
     type: "User",
     url: "https://api.github.com/users/satoshi-i-botlogy",
   },
+  {
+    avatar_url: "https://avatars.githubusercontent.com/u/54141439?v=4",
+    html_url: "https://github.com/satoshi-i-botlogy",
+    login: "dummy",
+    type: "User",
+    url: "https://api.github.com/users/satoshi-i-botlogy",
+  },
 ];
+
 
 export function AppRoot() {
   const [pulls, setPulls] = useState<object[]>([]);
 
   useEffect(() => {
-    const repos = ["Botlogy/botlogy", "kayu-s/practice"];
-    for (const repo of repos) {
-      axios
-        .get(`https://api.github.com/repos/${repo}/pulls`, {
-          headers: {
-            Authorization: `Bearer ${TOKEN}`,
-            "Content-Type": "application/json",
-          },
-        })
-        .then((res) => {
-          res.data[3].requested_reviewers = [
-            res.data[3].requested_reviewers,
-            ...dummy_reviewers,
-          ];
-          setPulls((pulls) => pulls.concat(res.data));
-        })
-        .catch((e) => console.log(e));
-    }
+    chrome.storage.sync.get("repositories", (result1) => {
+      chrome.storage.local.get("token", (result2) => {
+        for (const repo of result1["repositories"]) {
+          if (!repo.isShow) continue;
+          axiosBase(result2["token"])
+            .get(`repos/${repo.name}/pulls`)
+            .then((res) => {
+              setPulls((pulls) => pulls.concat(res.data));
+            })
+            .catch((e) => console.log(e));
+        }
+      });
+    });
   }, []);
 
   return (
-    <Grid container>
+    <Grid container sx={{ minWidth: 500 }}>
       <Grid item xs={8} sx={{ justifyContent: "flex-start", display: "flex" }}>
         <Typography
           variant="h1"

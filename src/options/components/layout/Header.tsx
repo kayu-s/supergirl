@@ -26,7 +26,7 @@ export const Header = ({ darkMode }: Types.OptionsProps) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Super girl | Settings
+            Supergirl | Settings
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
         </Toolbar>
