@@ -1,6 +1,7 @@
 import {
   Avatar,
   AvatarGroup,
+  CircularProgress,
   Grid,
   IconButton,
   Link,
@@ -13,6 +14,8 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import React, { useEffect, useState } from "react";
 import { Box, styled } from "@mui/system";
 import { axiosBase } from "../../commons/axios";
+import { useQuery } from "@apollo/client";
+import { GET_PULL_REQUESTS } from "../popup";
 
 const StyledParagraph = styled("p")({
   margin: 0,
@@ -64,25 +67,8 @@ const dummy_reviewers = [
   },
 ];
 
-
 export function AppRoot() {
-  const [pulls, setPulls] = useState<object[]>([]);
-
-  useEffect(() => {
-    chrome.storage.sync.get("repositories", (result1) => {
-      chrome.storage.local.get("token", (result2) => {
-        for (const repo of result1["repositories"]) {
-          if (!repo.isShow) continue;
-          axiosBase(result2["token"])
-            .get(`repos/${repo.name}/pulls`)
-            .then((res) => {
-              setPulls((pulls) => pulls.concat(res.data));
-            })
-            .catch((e) => console.log(e));
-        }
-      });
-    });
-  }, []);
+  const { loading, error, data } = useQuery(GET_PULL_REQUESTS);
 
   return (
     <Grid container sx={{ minWidth: 500 }}>
@@ -101,12 +87,18 @@ export function AppRoot() {
       </Grid>
       <Grid item xs={12}>
         <nav aria-label="popup">
-          <List sx={{ whiteSpace: "nowrap" }}>
-            {pulls.length > 0 &&
-              pulls.map((pull: any, i: number) => (
+          {loading && (
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <CircularProgress />
+            </Box>
+          )}
+          {error && <p>error</p>}
+          {data && (
+            <List sx={{ whiteSpace: "nowrap" }}>
+              {data.search.nodes.map((pr: any, i: number) => (
                 <ListItem key={i}>
-                  <Tooltip title={pull.user.login}>
-                    <Avatar alt={pull.user.login} src={pull.user.avatar_url} />
+                  <Tooltip title={pr.title}>
+                    <Avatar alt={pr.author.login} src={pr.author.avatarUrl} />
                   </Tooltip>
                   <Box
                     sx={{
@@ -118,25 +110,25 @@ export function AppRoot() {
                     }}
                   >
                     <Link
-                      href={pull.html_url}
-                      onClick={() => chrome.tabs.create({ url: pull.html_url })}
+                      href={pr.url}
+                      onClick={() => chrome.tabs.create({ url: pr.url })}
                     >
-                      {pull.title}
+                      {pr.title}
                     </Link>
                     <StyledParagraph>
-                      {pull.head.repo.name}
-                      <span> created at {convertToJst(pull.created_at)}</span>
+                      {pr.repository.name}
+                      <span> created at {convertToJst(pr.createdAt)}</span>
                     </StyledParagraph>
                   </Box>
                   <AvatarGroup max={4}>
-                    {pull.requested_reviewers.length > 0 &&
-                      pull.requested_reviewers.map(
+                    {pr.reviewRequests.nodes.length > 0 &&
+                      pr.reviewRequests.nodes.map(
                         (reviewer: any, i: number) => (
-                          <Tooltip title={reviewer.login}>
+                          <Tooltip title={reviewer.requestedReviewer.login}>
                             <Avatar
                               key={i}
-                              alt={reviewer.login}
-                              src={reviewer.avatar_url}
+                              alt={reviewer.requestedReviewer.login}
+                              src={reviewer.requestedReviewer.avatarUrl}
                               sx={{ width: 32, height: 32 }}
                             />
                           </Tooltip>
@@ -145,7 +137,8 @@ export function AppRoot() {
                   </AvatarGroup>
                 </ListItem>
               ))}
-          </List>
+            </List>
+          )}
         </nav>
       </Grid>
     </Grid>
