@@ -1,6 +1,7 @@
 import {
   Avatar,
   AvatarGroup,
+  Badge,
   CircularProgress,
   Grid,
   IconButton,
@@ -11,11 +12,11 @@ import {
   Typography,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Box, styled } from "@mui/system";
-import { axiosBase } from "../../commons/axios";
 import { useQuery } from "@apollo/client";
 import { GET_PULL_REQUESTS } from "../popup";
+import CommentIcon from "@mui/icons-material/Comment";
 
 const StyledParagraph = styled("p")({
   margin: 0,
@@ -31,39 +32,46 @@ const convertToJst = (utcDate: Date) => {
 
 const dummy_reviewers = [
   {
-    avatar_url: "https://avatars.githubusercontent.com/u/54141439?v=4",
-    html_url: "https://github.com/satoshi-i-botlogy",
-    login: "dummy",
-    type: "User",
-    url: "https://api.github.com/users/satoshi-i-botlogy",
+    requestedReviewer: {
+      login: "kayu-s",
+      avatarUrl:
+        "https://avatars.githubusercontent.com/u/64003844?u=d31fbad4596b5bdc7aa8b26a488bffe19947b6a4&v=4",
+      url: "https://github.com/kayu-s",
+    },
   },
   {
-    avatar_url: "https://avatars.githubusercontent.com/u/54141439?v=4",
-    html_url: "https://github.com/satoshi-i-botlogy",
-    login: "dummy",
-    type: "User",
-    url: "https://api.github.com/users/satoshi-i-botlogy",
+    requestedReviewer: {
+      login: "kayu-s",
+      avatarUrl:
+        "https://avatars.githubusercontent.com/u/64003844?u=d31fbad4596b5bdc7aa8b26a488bffe19947b6a4&v=4",
+      url: "https://github.com/kayu-s",
+    },
+  },
+  ,
+  {
+    requestedReviewer: {
+      login: "kayu-s",
+      avatarUrl:
+        "https://avatars.githubusercontent.com/u/64003844?u=d31fbad4596b5bdc7aa8b26a488bffe19947b6a4&v=4",
+      url: "https://github.com/kayu-s",
+    },
+  },
+  ,
+  {
+    requestedReviewer: {
+      login: "kayu-s",
+      avatarUrl:
+        "https://avatars.githubusercontent.com/u/64003844?u=d31fbad4596b5bdc7aa8b26a488bffe19947b6a4&v=4",
+      url: "https://github.com/kayu-s",
+    },
   },
   {
-    avatar_url: "https://avatars.githubusercontent.com/u/54141439?v=4",
-    html_url: "https://github.com/satoshi-i-botlogy",
-    login: "dummy",
-    type: "User",
-    url: "https://api.github.com/users/satoshi-i-botlogy",
-  },
-  {
-    avatar_url: "https://avatars.githubusercontent.com/u/54141439?v=4",
-    html_url: "https://github.com/satoshi-i-botlogy",
-    login: "dummy",
-    type: "User",
-    url: "https://api.github.com/users/satoshi-i-botlogy",
-  },
-  {
-    avatar_url: "https://avatars.githubusercontent.com/u/54141439?v=4",
-    html_url: "https://github.com/satoshi-i-botlogy",
-    login: "dummy",
-    type: "User",
-    url: "https://api.github.com/users/satoshi-i-botlogy",
+    requestedReviewer: {
+      login: "kayu-s",
+      avatarUrl:
+        "https://avatars.githubusercontent.com/u/64003844?u=d31fbad4596b5bdc7aa8b26a488bffe19947b6a4&v=4",
+      url: "https://github.com/kayu-s",
+    },
   },
 ];
 
@@ -97,7 +105,7 @@ export function AppRoot() {
             <List sx={{ whiteSpace: "nowrap" }}>
               {data.search.nodes.map((pr: any, i: number) => (
                 <ListItem key={i}>
-                  <Tooltip title={pr.title}>
+                  <Tooltip title={pr.author.login}>
                     <Avatar alt={pr.author.login} src={pr.author.avatarUrl} />
                   </Tooltip>
                   <Box
@@ -120,6 +128,17 @@ export function AppRoot() {
                       <span> created at {convertToJst(pr.createdAt)}</span>
                     </StyledParagraph>
                   </Box>
+                  {pr.comments.edges && (
+                    <Box sx={{ margin: "0 10px" }}>
+                      <Badge
+                        color="primary"
+                        badgeContent={pr.comments.edges.length}
+                      >
+                        <CommentIcon />
+                      </Badge>
+                    </Box>
+                  )}
+
                   <AvatarGroup max={4}>
                     {pr.reviewRequests.nodes.length > 0 &&
                       pr.reviewRequests.nodes.map(
