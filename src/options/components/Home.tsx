@@ -13,11 +13,7 @@ import {
 import KeyIcon from "@mui/icons-material/Key";
 import React, { useEffect, useState } from "react";
 import { axiosBase } from "../../commons/axios";
-
-type Repository = {
-  isShow: boolean;
-  name: string;
-};
+import { Repository } from "../../types/options";
 
 const setInitialRepositories = (response: object[], storages: Repository[]) => {
   return response.map((repo: any) => {

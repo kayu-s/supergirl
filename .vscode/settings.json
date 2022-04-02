@@ -11,5 +11,6 @@
         "Dexie",
         "dexie",
         "jexcel"
-    ]
+    ],
+    "editor.formatOnSave": true
 }
