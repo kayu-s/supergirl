@@ -37,12 +37,8 @@ export const GET_PULL_REQUESTS = gql`
   # live syntax, and validation errors highlighted within the text.
 
   # We'll get you started with a simple query showing your username!
-  query {
-    search(
-      type: ISSUE
-      last: 100
-      query: "is:open is:pr review-requested:@me"
-    ) {
+  query ($query: String!) {
+    search(type: ISSUE, last: 50, query: $query) {
       issueCount
       nodes {
         ... on PullRequest {
@@ -54,7 +50,7 @@ export const GET_PULL_REQUESTS = gql`
             avatarUrl
             url
           }
-          comments(first: 100) {
+          comments(first: 50) {
             edges {
               node {
                 id
@@ -64,7 +60,7 @@ export const GET_PULL_REQUESTS = gql`
           repository {
             name
           }
-          reviewRequests(first: 100) {
+          reviewRequests(first: 50) {
             nodes {
               requestedReviewer {
                 ... on User {

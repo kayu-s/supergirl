@@ -17,6 +17,7 @@ module.exports = {
   entry: {
     popup: path.join(srcDir, "popup/popup.tsx"),
     options: path.join(srcDir, "options/options.tsx"),
+    background: path.join(srcDir, "background/background.ts"),
   },
   output: {
     filename: "[name].js",

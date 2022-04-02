@@ -2,6 +2,7 @@ import {
   Avatar,
   AvatarGroup,
   Badge,
+  BadgeProps,
   CircularProgress,
   Grid,
   IconButton,
@@ -12,17 +13,30 @@ import {
   Typography,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
-import React from "react";
+import React, { useState } from "react";
 import { Box, styled } from "@mui/system";
 import { useQuery } from "@apollo/client";
 import { GET_PULL_REQUESTS } from "../popup";
-import CommentIcon from "@mui/icons-material/Comment";
+import ChatBubbleOutlineRoundedIcon from "@mui/icons-material/ChatBubbleOutlineRounded";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import { Repository } from "../../types/options";
 
 const StyledParagraph = styled("p")({
   margin: 0,
   color: "#57606a",
   fontSize: "12px",
 });
+
+const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    right: -3,
+    top: 10,
+    border: `2px solid #565656`,
+    padding: "0 4px",
+  },
+}));
 
 const convertToJst = (utcDate: Date) => {
   const date = new Date(utcDate);
@@ -75,8 +89,24 @@ const dummy_reviewers = [
   },
 ];
 
+const repos = await chrome.storage.sync.get("repositories");
+const targetRepos = repos["repositories"]
+  .map((o: Repository) => o.name)
+  .join(" repo:");
+
 export function AppRoot() {
-  const { loading, error, data } = useQuery(GET_PULL_REQUESTS);
+  const [isMe, setIsMe] = useState<boolean>(true);
+  const { loading, error, data } = useQuery(GET_PULL_REQUESTS, {
+    variables: {
+      query: isMe
+        ? "is:open is:pr review-requested:@me repo:" + targetRepos
+        : "is:open is:pr repo:" + targetRepos,
+    },
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsMe(e.target.checked);
+  };
 
   return (
     <Grid container sx={{ minWidth: 500 }}>
@@ -93,6 +123,15 @@ export function AppRoot() {
           <SettingsIcon />
         </IconButton>
       </Grid>
+      <FormGroup>
+        <FormControlLabel
+          control={
+            <Switch checked={isMe} onChange={handleChange} defaultChecked />
+          }
+          label="@me?"
+        />
+      </FormGroup>
+
       <Grid item xs={12}>
         <nav aria-label="popup">
           {loading && (
@@ -100,7 +139,12 @@ export function AppRoot() {
               <CircularProgress />
             </Box>
           )}
-          {error && <p>error</p>}
+          {error && (
+            <Typography variant="h6" color="error">
+              An error occurred, Please consider that your access token is
+              valid.
+            </Typography>
+          )}
           {data && (
             <List sx={{ whiteSpace: "nowrap" }}>
               {data.search.nodes.map((pr: any, i: number) => (
@@ -115,6 +159,7 @@ export function AppRoot() {
                       overflow: "hidden",
                       whiteSpace: "nowrap",
                       margin: "0 5px",
+                      padding: "10px 0",
                     }}
                   >
                     <Link
@@ -123,22 +168,25 @@ export function AppRoot() {
                     >
                       {pr.title}
                     </Link>
+                    {/* Comments */}
+                    {pr.comments.edges.length > 0 && (
+                      <StyledBadge
+                        color="info"
+                        badgeContent={pr.comments.edges.length}
+                      >
+                        <ChatBubbleOutlineRoundedIcon
+                          color="action"
+                          fontSize="medium"
+                        />
+                      </StyledBadge>
+                    )}
                     <StyledParagraph>
                       {pr.repository.name}
                       <span> created at {convertToJst(pr.createdAt)}</span>
                     </StyledParagraph>
                   </Box>
-                  {pr.comments.edges && (
-                    <Box sx={{ margin: "0 10px" }}>
-                      <Badge
-                        color="primary"
-                        badgeContent={pr.comments.edges.length}
-                      >
-                        <CommentIcon />
-                      </Badge>
-                    </Box>
-                  )}
 
+                  {/* Reviewers */}
                   <AvatarGroup max={4}>
                     {pr.reviewRequests.nodes.length > 0 &&
                       pr.reviewRequests.nodes.map(
