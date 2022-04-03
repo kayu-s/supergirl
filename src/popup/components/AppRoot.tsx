@@ -141,8 +141,7 @@ export function AppRoot() {
           )}
           {error && (
             <Typography variant="h6" color="error">
-              An error occurred, Please consider that your access token is
-              valid.
+              An error occurred, Please confirm if your access token is valid.
             </Typography>
           )}
           {data && (
