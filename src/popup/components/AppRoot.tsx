@@ -44,55 +44,12 @@ const convertToJst = (utcDate: Date) => {
   return date.toLocaleString();
 };
 
-const dummy_reviewers = [
-  {
-    requestedReviewer: {
-      login: "kayu-s",
-      avatarUrl:
-        "https://avatars.githubusercontent.com/u/64003844?u=d31fbad4596b5bdc7aa8b26a488bffe19947b6a4&v=4",
-      url: "https://github.com/kayu-s",
-    },
-  },
-  {
-    requestedReviewer: {
-      login: "kayu-s",
-      avatarUrl:
-        "https://avatars.githubusercontent.com/u/64003844?u=d31fbad4596b5bdc7aa8b26a488bffe19947b6a4&v=4",
-      url: "https://github.com/kayu-s",
-    },
-  },
-  ,
-  {
-    requestedReviewer: {
-      login: "kayu-s",
-      avatarUrl:
-        "https://avatars.githubusercontent.com/u/64003844?u=d31fbad4596b5bdc7aa8b26a488bffe19947b6a4&v=4",
-      url: "https://github.com/kayu-s",
-    },
-  },
-  ,
-  {
-    requestedReviewer: {
-      login: "kayu-s",
-      avatarUrl:
-        "https://avatars.githubusercontent.com/u/64003844?u=d31fbad4596b5bdc7aa8b26a488bffe19947b6a4&v=4",
-      url: "https://github.com/kayu-s",
-    },
-  },
-  {
-    requestedReviewer: {
-      login: "kayu-s",
-      avatarUrl:
-        "https://avatars.githubusercontent.com/u/64003844?u=d31fbad4596b5bdc7aa8b26a488bffe19947b6a4&v=4",
-      url: "https://github.com/kayu-s",
-    },
-  },
-];
-
 const repos = await chrome.storage.sync.get("repositories");
 const targetRepos = repos["repositories"]
-  .map((o: Repository) => o.name)
-  .join(" repo:");
+  ? repos["repositories"]
+      .map((o: Repository) => o.isShow && o.name)
+      .join(" repo:")
+  : "";
 
 export function AppRoot() {
   const [isMe, setIsMe] = useState<boolean>(true);
@@ -144,7 +101,10 @@ export function AppRoot() {
               An error occurred, Please confirm if your access token is valid.
             </Typography>
           )}
-          {data && (
+          {data?.search.nodes.length === 0 && (
+            <Typography variant="h6">No result</Typography>
+          )}
+          {data?.search.nodes.length > 0 && (
             <List sx={{ whiteSpace: "nowrap" }}>
               {data.search.nodes.map((pr: any, i: number) => (
                 <ListItem key={i}>
