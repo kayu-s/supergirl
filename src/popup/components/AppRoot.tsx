@@ -16,12 +16,12 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import React, { useState } from "react";
 import { Box, styled } from "@mui/system";
 import { useQuery } from "@apollo/client";
-import { GET_PULL_REQUESTS } from "../popup";
 import ChatBubbleOutlineRoundedIcon from "@mui/icons-material/ChatBubbleOutlineRounded";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import { Repository } from "../../types/options";
+import { GET_PULL_REQUESTS } from "../../apollo/queries";
+import { getTargetRepositories } from "../../utils";
 
 const StyledParagraph = styled("p")({
   margin: 0,
@@ -44,20 +44,15 @@ const convertToJst = (utcDate: Date) => {
   return date.toLocaleString();
 };
 
-const repos = await chrome.storage.sync.get("repositories");
-const targetRepos = repos["repositories"]
-  ? repos["repositories"]
-      .map((o: Repository) => o.isShow && o.name)
-      .join(" repo:")
-  : "";
+const repositories = await getTargetRepositories();
 
 export function AppRoot() {
   const [isMe, setIsMe] = useState<boolean>(true);
   const { loading, error, data } = useQuery(GET_PULL_REQUESTS, {
     variables: {
       query: isMe
-        ? "is:open is:pr review-requested:@me repo:" + targetRepos
-        : "is:open is:pr repo:" + targetRepos,
+        ? "is:open is:pr review-requested:@me repo:" + repositories
+        : "is:open is:pr repo:" + repositories,
     },
   });
 
