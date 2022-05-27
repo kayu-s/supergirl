@@ -17,9 +17,9 @@ const subscription = () => {
       const count = result.data?.search.nodes.length;
       if (count === 0) {
         chrome.action.setBadgeText({ text: "" });
-        return;
+      } else {
+        chrome.action.setBadgeText({ text: String(count) });
       }
-      chrome.action.setBadgeText({ text: String(count) });
     })
     .catch((e) => {
       console.log(e);
