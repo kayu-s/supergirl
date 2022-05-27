@@ -22,6 +22,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { GET_PULL_REQUESTS } from "../../apollo/queries";
 import { getTargetRepositories } from "../../utils";
+import Joyride from "react-joyride";
 
 const StyledParagraph = styled("p")({
   margin: 0,
@@ -60,8 +61,20 @@ export function AppRoot() {
     setIsMe(e.target.checked);
   };
 
+  const steps = [
+    {
+      target: ".my-first-step",
+      content: "Register your github access token.",
+    },
+    {
+      target: ".my-second-step",
+      content: "Switch filter review requested to you.",
+    },
+  ];
+
   return (
     <Grid container sx={{ minWidth: 500 }}>
+      {!data && !loading && <Joyride steps={steps} continuous={true} />}
       <Grid item xs={8} sx={{ justifyContent: "flex-start", display: "flex" }}>
         <Typography
           variant="h1"
@@ -71,20 +84,23 @@ export function AppRoot() {
         </Typography>
       </Grid>
       <Grid item xs={4} sx={{ justifyContent: "flex-end", display: "flex" }}>
-        <IconButton onClick={() => chrome.runtime.openOptionsPage()}>
+        <IconButton
+          className="my-first-step"
+          onClick={() => chrome.runtime.openOptionsPage()}
+        >
           <SettingsIcon />
         </IconButton>
       </Grid>
       <FormGroup>
         <FormControlLabel
-          control={
-            <Switch checked={isMe} onChange={handleChange} defaultChecked />
-          }
+          className="my-second-step"
+          defaultChecked
+          control={<Switch checked={isMe} onChange={handleChange} />}
           label="@me?"
         />
       </FormGroup>
 
-      <Grid item xs={12}>
+      <Grid item xs={12} sx={{ minHeight: 400 }}>
         <nav aria-label="popup">
           {loading && (
             <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -93,11 +109,11 @@ export function AppRoot() {
           )}
           {error && (
             <Typography variant="h6" color="error">
-              An error occurred, Please confirm if your access token is valid.
+              Your token is incorrect or unregistered.
             </Typography>
           )}
           {data?.search.nodes.length === 0 && (
-            <Typography variant="h6">No result</Typography>
+            <Typography variant="h6">Review completed!🎉</Typography>
           )}
           {data?.search.nodes.length > 0 && (
             <List sx={{ whiteSpace: "nowrap" }}>
@@ -145,9 +161,12 @@ export function AppRoot() {
                     {pr.reviewRequests.nodes.length > 0 &&
                       pr.reviewRequests.nodes.map(
                         (reviewer: any, i: number) => (
-                          <Tooltip title={reviewer.requestedReviewer.login}>
+                          <Tooltip
+                            key={`tooltip_${i}`}
+                            title={reviewer.requestedReviewer.login}
+                          >
                             <Avatar
-                              key={i}
+                              key={`avatar_${i}`}
                               alt={reviewer.requestedReviewer.login}
                               src={reviewer.requestedReviewer.avatarUrl}
                               sx={{ width: 32, height: 32 }}

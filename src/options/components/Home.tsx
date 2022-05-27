@@ -14,6 +14,7 @@ import KeyIcon from "@mui/icons-material/Key";
 import React, { useEffect, useState } from "react";
 import { axiosBase } from "../../commons/axios";
 import { Repository } from "../../types/options";
+import Joyride from "react-joyride";
 
 const setInitialRepositories = (response: object[], storages: Repository[]) => {
   return response.map((repo: any) => {
@@ -74,8 +75,22 @@ export const Home = () => {
     chrome.storage.local.set({ token: e.target.value });
   };
 
+  const steps = [
+    {
+      target: ".my-first-step",
+      content: "Input your github access token.",
+    },
+    {
+      target: ".my-second-step",
+      content: "Check repository you want to monitor.",
+    },
+  ];
+
   return (
     <Container maxWidth="md">
+      {!token && (
+        <Joyride steps={steps} continuous={true} showSkipButton={true} />
+      )}
       <Typography variant="h3" gutterBottom>
         Repository settings
       </Typography>
@@ -86,6 +101,7 @@ export const Home = () => {
               Personal access token
             </InputLabel>
             <Input
+              className="my-first-step"
               id="input-with-icon-adornment"
               startAdornment={
                 <InputAdornment position="start">
@@ -101,6 +117,7 @@ export const Home = () => {
           </FormControl>{" "}
         </Grid>
       </Grid>
+      {repos && <div className="my-second-step"></div>}
       {repos.map((repo: Repository) => (
         <Grid container spacing={4} sx={{ marginBottom: 2 }}>
           <Grid item xs>
