@@ -11,6 +11,7 @@ const subscription = () => {
       variables: {
         query: "is:open is:pr review-requested:@me repo:" + repositories,
       },
+      fetchPolicy: "no-cache",
     })
     .then((result) => {
       console.log("result", result);
@@ -30,4 +31,4 @@ subscription();
 
 setInterval(() => {
   subscription();
-}, 1000 * 60 * 5);
+}, 1000 * 60 * 1);
