@@ -64,11 +64,13 @@ export function AppRoot() {
   const steps = [
     {
       target: ".my-first-step",
-      content: "Register your github access token.",
+      content:
+        "最初に、リポジトリの情報を取得する為の認証情報を設定してください。",
     },
     {
       target: ".my-second-step",
-      content: "Switch filter review requested to you.",
+      content:
+        "スイッチを外すと自分がレビュアーに設定されていないプルリクエストも表示できます。",
     },
   ];
 

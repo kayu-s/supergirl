@@ -78,11 +78,11 @@ export const Home = () => {
   const steps = [
     {
       target: ".my-first-step",
-      content: "Input your github access token.",
+      content: "GitHubで取得した個人アクセストークンを入力してください。",
     },
     {
       target: ".my-second-step",
-      content: "Check repository you want to monitor.",
+      content: "通知したいリポジトリーにチェックしてください。",
     },
   ];
 
