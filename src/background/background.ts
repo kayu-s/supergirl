@@ -2,9 +2,8 @@ import { client } from "../apollo";
 import { GET_PULL_REQUESTS } from "../apollo/queries";
 import { getTargetRepositories } from "../utils";
 
-const repositories = await getTargetRepositories();
-
-const subscription = () => {
+const subscription = async () => {
+  const repositories = await getTargetRepositories();
   client
     .query({
       query: GET_PULL_REQUESTS,
@@ -14,7 +13,6 @@ const subscription = () => {
       fetchPolicy: "no-cache",
     })
     .then((result) => {
-      console.log("result", result);
       const count = result.data?.search.nodes.length;
       if (count === 0) {
         chrome.action.setBadgeText({ text: "" });
