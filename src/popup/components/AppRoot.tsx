@@ -73,6 +73,7 @@ export function AppRoot() {
         "スイッチを外すと自分がレビュアーに設定されていないプルリクエストも表示できます。",
     },
   ];
+  const minHeight = !data ? 250 : 0;
 
   return (
     <Grid container sx={{ minWidth: 500 }}>
@@ -102,7 +103,7 @@ export function AppRoot() {
         />
       </FormGroup>
 
-      <Grid item xs={12} sx={{ minHeight: 400 }}>
+      <Grid item xs={12} sx={{ minHeight }}>
         <nav aria-label="popup">
           {loading && (
             <Box sx={{ display: "flex", justifyContent: "center" }}>

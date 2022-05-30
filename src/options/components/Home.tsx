@@ -78,7 +78,8 @@ export const Home = () => {
   const steps = [
     {
       target: ".my-first-step",
-      content: "GitHubで取得した個人アクセストークンを入力してください。",
+      content:
+        "GitHubで取得した個人アクセストークンを入力してください。権限は repo が必要です。",
     },
     {
       target: ".my-second-step",
