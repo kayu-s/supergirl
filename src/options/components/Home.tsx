@@ -79,11 +79,12 @@ export const Home = () => {
     {
       target: ".my-first-step",
       content:
-        "GitHubで取得した個人アクセストークンを入力してください。権限は repo が必要です。",
+        "GitHubで取得した個人アクセストークンを入力してください。権限は「repo」のみで大丈夫です。",
     },
     {
       target: ".my-second-step",
-      content: "通知したいリポジトリーにチェックしてください。",
+      content:
+        "閲覧権限のあるリポジトリが表示されますので、通知したいリポジトリにチェックしてください。",
     },
   ];
 
@@ -118,7 +119,7 @@ export const Home = () => {
           </FormControl>{" "}
         </Grid>
       </Grid>
-      {repos && <div className="my-second-step"></div>}
+      {repos && <div style={{ height: 100 }} className="my-second-step"></div>}
       {repos.map((repo: Repository) => (
         <Grid container spacing={4} sx={{ marginBottom: 2 }}>
           <Grid item xs>
