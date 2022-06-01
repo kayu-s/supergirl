@@ -25,8 +25,7 @@ const subscription = async () => {
     });
 };
 
-subscription();
-
-setInterval(() => {
+chrome.alarms.create({ delayInMinutes: 1, periodInMinutes: 1 });
+chrome.alarms.onAlarm.addListener(() => {
   subscription();
-}, 1000 * 60 * 1);
+});
