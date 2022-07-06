@@ -19,10 +19,20 @@ export const GET_PULL_REQUESTS = gql`
             avatarUrl
             url
           }
-          comments(first: 50) {
+          comments(first: 50, orderBy: { field: UPDATED_AT, direction: DESC }) {
             edges {
               node {
                 id
+                bodyText
+                author {
+                  avatarUrl
+                  login
+                }
+                updatedAt
+                url
+                pullRequest {
+                  title
+                }
               }
             }
           }
