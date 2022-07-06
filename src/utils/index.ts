@@ -9,3 +9,30 @@ export const getTargetRepositories = async (): Promise<string[]> => {
     : "";
   return targetRepos;
 };
+
+/**
+ *
+ * @param url Image url
+ * @returns converted image base64 strings
+ */
+export const getImageBase64 = async (url: string) => {
+  const response = await fetch(url);
+  const contentType = response.headers.get("content-type");
+  const arrayBuffer = await response.arrayBuffer();
+  let base64String = btoa(
+    String.fromCharCode.apply(null, new Uint8Array(arrayBuffer) as any)
+  );
+  return `data:${contentType};base64,${base64String}`;
+};
+
+/**
+ *
+ * @param strong
+ * @returns
+ */
+export const getUuId = (strong: number = 1000): string => {
+  return (
+    new Date().getTime().toString(16) +
+    Math.floor(strong * Math.random()).toString(16)
+  );
+};
