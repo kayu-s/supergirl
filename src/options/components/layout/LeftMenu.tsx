@@ -8,8 +8,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import HomeIcon from "@mui/icons-material/Home";
-import SendIcon from "@mui/icons-material/Send";
-import BusinessIcon from "@mui/icons-material/Business";
 import { Router, Route, Switch } from "react-router-dom";
 import { createMemoryHistory } from "history";
 import { Home } from "../Home";
