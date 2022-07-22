@@ -50,8 +50,44 @@ export const GET_PULL_REQUESTS = gql`
               }
             }
           }
+          reviews(first: 50) {
+            nodes {
+              comments(first: 10) {
+                edges {
+                  node {
+                    bodyText
+                    updatedAt
+                    author {
+                      login
+                      avatarUrl
+                    }
+                    id
+                    pullRequest {
+                      title
+                      url
+                    }
+                    url
+                  }
+                }
+              }
+              bodyText
+              author {
+                login
+                avatarUrl
+              }
+              updatedAt
+              id
+              pullRequest {
+                title
+              }
+              url
+            }
+          }
         }
       }
+    }
+    viewer {
+      login
     }
     rateLimit {
       limit

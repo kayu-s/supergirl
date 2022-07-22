@@ -36,3 +36,12 @@ export const getUuId = (strong: number = 1000): string => {
     Math.floor(strong * Math.random()).toString(16)
   );
 };
+
+export const isNotifyTarget = (
+  lastUpdatedAt: string,
+  duration: number
+): boolean => {
+  const date = new Date(lastUpdatedAt);
+  const progressSecond = (Date.now() - date.getTime()) / 1000;
+  return duration * 60 > progressSecond;
+};
