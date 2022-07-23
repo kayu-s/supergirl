@@ -13,6 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import React, { useState } from "react";
 import { Box, styled } from "@mui/system";
 import { useQuery } from "@apollo/client";
@@ -23,6 +24,8 @@ import Switch from "@mui/material/Switch";
 import { GET_PULL_REQUESTS } from "../../apollo/queries";
 import { getTargetRepositories } from "../../utils";
 import Joyride from "react-joyride";
+import CustomizedSnackbars from "./SnackBar";
+import { useSnackbar } from "./SnackBar.hook";
 
 const StyledParagraph = styled("p")({
   margin: 0,
@@ -57,6 +60,8 @@ export function AppRoot() {
     },
   });
 
+  const { setOpen } = useSnackbar();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsMe(e.target.checked);
   };
@@ -74,6 +79,10 @@ export function AppRoot() {
     },
   ];
   const minHeight = !data ? 250 : 0;
+  const handleCopyClick = (title: string) => {
+    navigator.clipboard.writeText(title);
+    setOpen(true);
+  };
 
   return (
     <Grid container sx={{ minWidth: 500 }}>
@@ -135,12 +144,21 @@ export function AppRoot() {
                       padding: "10px 0",
                     }}
                   >
+                    {/* Copy Title */}
+                    <IconButton
+                      size="small"
+                      aria-label="copy"
+                      onClick={() => handleCopyClick(pr.title)}
+                    >
+                      <ContentCopyIcon sx={{ fontSize: "1.125rem" }} />
+                    </IconButton>
                     <Link
                       href={pr.url}
                       onClick={() => chrome.tabs.create({ url: pr.url })}
                     >
                       {pr.title}
                     </Link>
+
                     {/* Comments */}
                     {pr.comments.edges.length > 0 && (
                       <StyledBadge
