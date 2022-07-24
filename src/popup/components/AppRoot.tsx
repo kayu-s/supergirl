@@ -24,8 +24,8 @@ import Switch from "@mui/material/Switch";
 import { GET_PULL_REQUESTS } from "../../apollo/queries";
 import { getTargetRepositories } from "../../utils";
 import Joyride from "react-joyride";
-import CustomizedSnackbars from "./SnackBar";
-import { useSnackbar } from "./SnackBar.hook";
+// import CustomizedSnackbars from "./SnackBar";
+// import { useSnackbar } from "./SnackBar.hook";
 
 const StyledParagraph = styled("p")({
   margin: 0,
@@ -60,7 +60,7 @@ export function AppRoot() {
     },
   });
 
-  const { setOpen } = useSnackbar();
+  // const { setOpen } = useSnackbar();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsMe(e.target.checked);
@@ -81,7 +81,7 @@ export function AppRoot() {
   const minHeight = !data ? 250 : 0;
   const handleCopyClick = (title: string) => {
     navigator.clipboard.writeText(title);
-    setOpen(true);
+    // setOpen(true);
   };
 
   return (
