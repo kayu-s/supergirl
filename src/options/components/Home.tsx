@@ -94,7 +94,7 @@ export const Home = () => {
         <Joyride steps={steps} continuous={true} showSkipButton={true} />
       )}
       <Typography variant="h3" gutterBottom>
-        Repository settings
+        Repositories
       </Typography>
       <Grid container spacing={4}>
         <Grid item xs>
@@ -116,12 +116,12 @@ export const Home = () => {
               type="password"
               sx={{ width: "300px", marginBottom: "15px" }}
             />
-          </FormControl>{" "}
+          </FormControl>
         </Grid>
       </Grid>
       {repos && <div style={{ height: 100 }} className="my-second-step"></div>}
-      {repos.map((repo: Repository) => (
-        <Grid container spacing={4} sx={{ marginBottom: 2 }}>
+      {repos.map((repo: Repository, i: number) => (
+        <Grid container spacing={4} sx={{ marginBottom: 2 }} key={i}>
           <Grid item xs>
             <FormGroup>
               <FormControlLabel

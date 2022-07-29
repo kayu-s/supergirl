@@ -45,7 +45,7 @@ export const subscription = async () => {
       },
       fetchPolicy: "no-cache",
     })
-    .then((result) => {
+    .then(async (result) => {
       const { viewer, search } = result.data;
       const { nodes } = search;
       const authorizedUser = viewer.login;
@@ -64,6 +64,9 @@ export const subscription = async () => {
       } else {
         chrome.action.setBadgeText({ text: String(count) });
       }
+
+      const items = await chrome.storage.sync.get("notifications");
+      if (items.notifications?.comment === false) return;
 
       // Notify comments
       nodes.map((node: any) => {

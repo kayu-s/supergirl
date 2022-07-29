@@ -1,57 +1,107 @@
 import {
-  Checkbox,
+  Alert,
+  Button,
   Container,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
   Grid,
-  Input,
-  InputAdornment,
-  InputLabel,
+  Snackbar,
   Switch,
-  TextField,
   Typography,
 } from "@mui/material";
-import KeyIcon from "@mui/icons-material/Key";
 import React, { useEffect, useState } from "react";
-import { axiosBase } from "../../commons/axios";
-import { Repository } from "../../types/options";
-import Joyride from "react-joyride";
+import SaveIcon from "@mui/icons-material/Save";
+import { styled } from "@mui/system";
+
+type Notifications = {
+  notifications: {
+    comment: boolean;
+  };
+};
+
+const StyledForthTypography = styled(Typography)({
+  fontSize: "1.7rem",
+});
 
 export const Notifications = () => {
+  const [checked, setChecked] = useState<boolean>(true);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    chrome.storage.sync.get("notifications", (items) => {
+      if (items.notifications?.comment !== undefined) {
+        setChecked(items.notifications.comment);
+      }
+    });
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { checked } = e.target;
+    setChecked(checked);
+  };
+
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const handleSubmit = () => {
+    chrome.storage.sync
+      .set({
+        notifications: {
+          comment: checked,
+        },
+      })
+      .then(() => {
+        setOpen(true);
+      });
+  };
+
   return (
     <Container maxWidth="md">
       <Typography variant="h3" gutterBottom>
         Notifications
       </Typography>
       <Grid container spacing={4}>
-        <Typography variant="h4" gutterBottom>
-          Enable work in background
-        </Typography>
-        <Switch />
-        <Grid container spacing={4}>
-          <Grid item xs>
-            <Switch />
+        <Grid item xs={12}>
+          <StyledForthTypography variant="h4" gutterBottom>
+            Comment
+          </StyledForthTypography>
+          <Grid
+            item
+            xs={12}
+            direction="row"
+            alignItems="center"
+            sx={{ display: "flex" }}
+          >
+            <Typography>Off</Typography>
+            <Switch checked={checked} onChange={handleChange} />
+            <Typography>On</Typography>
           </Grid>
-          <Typography variant="h5">check interval(Minutes)</Typography>
-          <Grid item xs>
-            <FormControl variant="standard">
-              <InputLabel htmlFor="input-with-icon-adornment">
-                Personal access token
-              </InputLabel>
-              <Input
-                className="my-first-step"
-                id="input-with-icon-adornment"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <KeyIcon />
-                  </InputAdornment>
-                }
-                type="password"
-                sx={{ width: "300px", marginBottom: "15px" }}
-              />
-            </FormControl>
-          </Grid>
+        </Grid>
+      </Grid>
+      <Grid container spacing={4} sx={{ marginTop: "0.1rem" }}>
+        <Grid item xs={12}>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            endIcon={<SaveIcon />}
+          >
+            Save
+          </Button>
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert
+              onClose={handleClose}
+              severity="success"
+              sx={{ width: "100%" }}
+            >
+              Successfully saved!
+            </Alert>
+          </Snackbar>
         </Grid>
       </Grid>
     </Container>
