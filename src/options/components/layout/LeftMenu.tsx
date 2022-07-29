@@ -11,8 +11,9 @@ import HomeIcon from "@mui/icons-material/Home";
 import { Router, Route, Switch } from "react-router-dom";
 import { createMemoryHistory } from "history";
 import { Home } from "../Home";
+import { Notifications } from "../Notifications";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 const history = createMemoryHistory();
-
 const drawerWidth = 240;
 const headerHeight = 64;
 interface Props {
@@ -36,11 +37,21 @@ export function LeftMenu(props: Props) {
       <Toolbar />
       <Divider />
       <List>
-        <ListItem button key="Home" onClick={() => history.push("/")}>
+        <ListItem button key="repositories" onClick={() => history.push("/")}>
           <ListItemIcon>
             <HomeIcon />
           </ListItemIcon>
-          <ListItemText primary="Home" />
+          <ListItemText primary="Repositories" />
+        </ListItem>
+        <ListItem
+          button
+          key="notifications"
+          onClick={() => history.push("/notifications")}
+        >
+          <ListItemIcon>
+            <NotificationsActiveIcon />
+          </ListItemIcon>
+          <ListItemText primary="Notifications" />
         </ListItem>
       </List>
     </Router>
@@ -103,6 +114,7 @@ export function LeftMenu(props: Props) {
         <Router history={history}>
           <Switch>
             <Route exact path="/" component={Home} />
+            <Route exact path="/notifications" component={Notifications} />
           </Switch>
         </Router>
       </Box>
