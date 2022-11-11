@@ -179,12 +179,18 @@ export function AppRoot() {
                         (reviewer: any, i: number) => (
                           <Tooltip
                             key={`tooltip_${i}`}
-                            title={reviewer.requestedReviewer.login}
+                            title={
+                              reviewer.requestedReviewer?.login ||
+                              reviewer.requestedReviewer?.name
+                            }
                           >
                             <Avatar
                               key={`avatar_${i}`}
-                              alt={reviewer.requestedReviewer.login}
-                              src={reviewer.requestedReviewer.avatarUrl}
+                              alt={
+                                reviewer.requestedReviewer?.login ||
+                                reviewer.requestedReviewer?.name
+                              }
+                              src={reviewer.requestedReviewer?.avatarUrl}
                               sx={{ width: 32, height: 32 }}
                             />
                           </Tooltip>
