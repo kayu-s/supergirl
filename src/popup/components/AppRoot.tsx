@@ -126,8 +126,8 @@ export function AppRoot() {
             <List sx={{ whiteSpace: "nowrap" }}>
               {data.search.nodes.map((pr: any, i: number) => (
                 <ListItem key={i}>
-                  <Tooltip title={pr.author.login}>
-                    <Avatar alt={pr.author.login} src={pr.author.avatarUrl} />
+                  <Tooltip title={pr.author?.login}>
+                    <Avatar alt={pr.author?.login} src={pr.author?.avatarUrl} />
                   </Tooltip>
                   <Box
                     sx={{
