@@ -47,6 +47,11 @@ export const GET_PULL_REQUESTS = gql`
                   avatarUrl
                   url
                 }
+                ... on Team {
+                  name
+                  avatarUrl
+                  url
+                }
               }
             }
           }
