@@ -45,3 +45,16 @@ export const isNotifyTarget = (
   const progressSecond = (Date.now() - date.getTime()) / 1000;
   return duration * 60 > progressSecond;
 };
+
+export const removeDuplicateFromObjectArray =
+  (key: string) =>
+  (objectArray: object[]): any => {
+    return Array.from(
+      objectArray
+        .reduce(
+          (map: any, current: any) => map.set(current[key], current),
+          new Map()
+        )
+        .values()
+    );
+  };
