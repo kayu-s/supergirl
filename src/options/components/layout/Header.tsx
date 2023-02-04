@@ -5,13 +5,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import { OptionsModule } from "../../store/modules/options-module";
-import { connect } from "react-redux";
-import { RootState } from "../../store/store";
-import * as Types from "../../../types/options";
 
-const labelText = "ずっと真夜中にする";
-export const Header = ({ darkMode }: Types.OptionsProps) => {
+export const Header = () => {
   return (
     <Box sx={{ flexGrow: 1, zIndex: "9999" }}>
       <AppBar position="fixed" sx={{ zIndex: "9999" }}>
@@ -34,9 +29,3 @@ export const Header = ({ darkMode }: Types.OptionsProps) => {
     </Box>
   );
 };
-
-const mapStateToProps = (state: RootState): Types.OptionsProps => ({
-  darkMode: state.option.darkMode,
-});
-
-export default connect(mapStateToProps)(Header);

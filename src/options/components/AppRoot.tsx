@@ -2,10 +2,7 @@ import React from "react";
 import { Frame } from "../components/layout/Frame";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@emotion/react";
-import { connect } from "react-redux";
-import { RootState } from "../store/store";
 import { createTheme } from "@mui/material";
-import * as Types from "../../types/options";
 import { grey } from "@mui/material/colors";
 // When using TypeScript 4.x and above
 import type {} from "@mui/lab/themeAugmentation";
@@ -27,8 +24,8 @@ const getDesignTokens = (mode: PaletteMode) => ({
   },
 });
 
-export const AppRoot = ({ darkMode }: Types.OptionsProps) => {
-  const mode = darkMode ? "dark" : "light";
+export const AppRoot = () => {
+  const mode = "light";
 
   const theme = React.useMemo(
     () => createTheme(getDesignTokens("light")),
@@ -42,9 +39,3 @@ export const AppRoot = ({ darkMode }: Types.OptionsProps) => {
     </ThemeProvider>
   );
 };
-
-const mapStateToProps = (state: RootState): Types.OptionsProps => ({
-  darkMode: state.option.darkMode,
-});
-
-export default connect(mapStateToProps)(AppRoot);
