@@ -25,8 +25,6 @@ const getDesignTokens = (mode: PaletteMode) => ({
 });
 
 export const AppRoot = () => {
-  const mode = "light";
-
   const theme = React.useMemo(
     () => createTheme(getDesignTokens("light")),
     ["light"]

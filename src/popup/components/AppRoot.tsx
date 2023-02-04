@@ -128,7 +128,7 @@ export function AppRoot() {
           variant="h1"
           sx={{ fontSize: "1.2rem", padding: "0 16px", color: "#57606a" }}
         >
-          Pull requests
+          Supergirl
         </Typography>
       </Grid>
       <Grid item xs={4} sx={{ justifyContent: "flex-end", display: "flex" }}>
