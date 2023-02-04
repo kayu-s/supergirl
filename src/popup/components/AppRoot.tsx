@@ -126,7 +126,7 @@ export function AppRoot() {
       <Grid item xs={8} sx={{ justifyContent: "flex-start", display: "flex" }}>
         <Typography
           variant="h1"
-          sx={{ fontSize: "1.2rem", padding: "0 16px", color: "#57606a" }}
+          sx={{ fontSize: "1.2rem", padding: "5px", color: "#57606a" }}
         >
           Supergirl
         </Typography>
