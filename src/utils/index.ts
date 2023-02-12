@@ -46,15 +46,10 @@ export const isNotifyTarget = (
   return duration * 60 > progressSecond;
 };
 
-export const removeDuplicateFromObjectArray =
-  (key: string) =>
-  (objectArray: object[]): any => {
-    return Array.from(
-      objectArray
-        .reduce(
-          (map: any, current: any) => map.set(current[key], current),
-          new Map()
-        )
-        .values()
-    );
-  };
+export const uniqueByKey = <T, K extends keyof T>(array: T[], key: K): T[] => {
+  const map = array.reduce(
+    (m, current) => m.set(current[key], current),
+    new Map<T[K], T>()
+  );
+  return Array.from(map.values());
+};
