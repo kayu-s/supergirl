@@ -23,7 +23,6 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { GET_PULL_REQUESTS } from "../../apollo/queries";
 import {
-  getImageBase64,
   getTargetRepositories,
   removeDuplicateFromObjectArray,
 } from "../../utils";
@@ -120,6 +119,7 @@ export function AppRoot() {
   }, [data]);
 
   const filterableAuthors = isMe ? requestedAuthors : allAuthors;
+
   return (
     <Grid container sx={{ minWidth: 500 }}>
       {!data && !loading && <Joyride steps={steps} continuous={true} />}
@@ -165,7 +165,6 @@ export function AppRoot() {
                       src={author.avatarUrl}
                       sx={
                         (console.log(queryAuthor, authorName),
-                        getImageBase64(author.avatarUrl),
                         queryAuthor === authorName
                           ? {
                               border: "1px solid!important;",
