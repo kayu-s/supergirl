@@ -1,3 +1,4 @@
+import split from "just-split";
 import { Repository } from "../types/options";
 
 export const getTargetRepositories = async (): Promise<string[]> => {
@@ -19,9 +20,12 @@ export const getImageBase64 = async (url: string) => {
   const response = await fetch(url);
   const contentType = response.headers.get("content-type");
   const arrayBuffer = await response.arrayBuffer();
-  let base64String = btoa(
-    String.fromCharCode.apply(null, new Uint8Array(arrayBuffer) as any)
-  );
+  const uint8Array = [...new Uint8Array(arrayBuffer)];
+  // https://www.npmjs.com/package/just-split
+  const encoded = split(uint8Array, 1024)
+    .map((chunk) => String.fromCharCode(...chunk))
+    .reduce((previous, current) => previous + current, "");
+  const base64String = window.btoa(encoded);
   return `data:${contentType};base64,${base64String}`;
 };
 
