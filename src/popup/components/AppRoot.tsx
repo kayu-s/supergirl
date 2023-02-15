@@ -22,10 +22,7 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { GET_PULL_REQUESTS } from "../../apollo/queries";
-import {
-  getTargetRepositories,
-  removeDuplicateFromObjectArray,
-} from "../../utils";
+import { getTargetRepositories, uniqueByKey } from "../../utils";
 import Joyride from "react-joyride";
 
 const StyledParagraph = styled("p")({
@@ -61,6 +58,9 @@ type Filters = {
   isMe: boolean;
   author: string;
 };
+
+// TODO: graphql-schemaを導入するまで仮の型定義
+type Author = { login: string };
 
 const queryGenerator = (filters: Filters) => {
   let baseQuery = "is:open is:pr repo:" + repositories;
@@ -104,18 +104,22 @@ export function AppRoot() {
     setQueryAuthor(authorName === queryAuthor ? "" : authorName);
   };
 
-  const [requestedAuthors, setRequestedAuthors] = useState<[]>();
-  const [allAuthors, setAllAuthors] = useState<[]>();
+  const [requestedAuthors, setRequestedAuthors] = useState<Author[]>();
+  const [allAuthors, setAllAuthors] = useState<Author[]>();
 
   useEffect(() => {
     if (data?.search.nodes.length === 0 || loading) return;
     if (requestedAuthors && allAuthors) return;
-    const curriedRemoveDuplicateFromObjectArray =
-      removeDuplicateFromObjectArray("login");
-    const authors = data.search.nodes.map((node: any) => node.author);
-    isMe
-      ? setRequestedAuthors(curriedRemoveDuplicateFromObjectArray(authors))
-      : setAllAuthors(curriedRemoveDuplicateFromObjectArray(authors));
+
+    const authors = data.search.nodes.map(
+      (node: any) => node.author
+    ) as Author[];
+    const uniqueAuthors = uniqueByKey(authors, "login");
+    if (isMe) {
+      setRequestedAuthors(uniqueAuthors);
+    } else {
+      setAllAuthors(uniqueAuthors);
+    }
   }, [data]);
 
   const filterableAuthors = isMe ? requestedAuthors : allAuthors;
