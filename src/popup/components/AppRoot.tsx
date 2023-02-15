@@ -279,7 +279,17 @@ export function AppRoot() {
       </Grid>
       <Grid item xs={12}>
         <Typography variant="caption" display="block" gutterBottom>
-          version: {VERSION}
+          version: {VERSION}{" "}
+          <Link
+            href={`https://github.com/kayu-s/supergirl/releases/tag/v${VERSION}`}
+            onClick={() =>
+              chrome.tabs.create({
+                url: `https://github.com/kayu-s/supergirl/releases/tag/v${VERSION}`,
+              })
+            }
+          >
+            release note
+          </Link>
         </Typography>
       </Grid>
     </Grid>

@@ -1,5 +1,5 @@
 {
-  "version": "2.4.1",
+  "version": "2.4.0",
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/chrome": "0.0.154",
@@ -22,7 +22,7 @@
     "build": "webpack --config webpacks/webpack.prod.js",
     "watch": "webpack --config webpacks/webpack.dev.js --watch",
     "format": "prettier --write 'src/**/*.(ts|tsx)'",
-    "prebuild": "echo 'const VERSION = \"'$npm_package_version'\";' > src/constants.ts"
+    "prebuild": "echo 'export const VERSION = \"'$npm_package_version'\";' > src/constants.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.5.9",
