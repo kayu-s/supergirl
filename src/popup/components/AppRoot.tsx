@@ -24,6 +24,7 @@ import Switch from "@mui/material/Switch";
 import { GET_PULL_REQUESTS } from "../../apollo/queries";
 import { getTargetRepositories, uniqueByKey } from "../../utils";
 import Joyride from "react-joyride";
+import { VERSION } from "../../constants";
 
 const StyledParagraph = styled("p")({
   margin: 0,
@@ -168,14 +169,13 @@ export function AppRoot() {
                       alt={authorName}
                       src={author.avatarUrl}
                       sx={
-                        (console.log(queryAuthor, authorName),
                         queryAuthor === authorName
                           ? {
                               border: "1px solid!important;",
                               width: 32,
                               height: 32,
                             }
-                          : { width: 32, height: 32 })
+                          : { width: 32, height: 32 }
                       }
                     />
                   </StyledAuthorAvatarDiv>
@@ -280,6 +280,21 @@ export function AppRoot() {
             </List>
           )}
         </nav>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography variant="caption" display="block" gutterBottom>
+          version: {VERSION}{" "}
+          <Link
+            href={`https://github.com/kayu-s/supergirl/releases/tag/v${VERSION}`}
+            onClick={() =>
+              chrome.tabs.create({
+                url: `https://github.com/kayu-s/supergirl/releases/tag/v${VERSION}`,
+              })
+            }
+          >
+            release note
+          </Link>
+        </Typography>
       </Grid>
     </Grid>
   );
