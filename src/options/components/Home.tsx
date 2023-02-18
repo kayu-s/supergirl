@@ -79,7 +79,7 @@ export const Home = () => {
     {
       target: ".my-first-step",
       content:
-        "GitHubで取得した個人アクセストークンを入力してください。権限は「repo, read:org, read:discussion」が必要です。",
+        "GitHubで取得した個人アクセストークン(classic)を入力してください。権限は「repo, read:org, read:discussion」が必要です。",
     },
     {
       target: ".my-second-step",
