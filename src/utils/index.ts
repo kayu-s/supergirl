@@ -1,14 +1,18 @@
 import split from "just-split";
-import { Repository } from "../types/options";
+import { isRepository } from "../types/options";
 
-export const getTargetRepositories = async (): Promise<string[]> => {
-  const repos = await chrome.storage.sync.get("repositories");
-  const targetRepos = repos["repositories"]
-    ? repos["repositories"]
-        .map((o: Repository) => o.isShow && o.name)
-        .join(" repo:")
-    : "";
-  return targetRepos;
+export const getTargetRepositories = async (): Promise<string> => {
+  const repos = await chrome.storage.sync
+    .get("repositories")
+    .then((storage) => {
+      const repositories = storage["repositories"];
+      if (!Array.isArray(repositories)) return [];
+      return repositories.filter(isRepository);
+    });
+  return repos
+    .filter(({ isShow }) => isShow)
+    .map(({ name }) => name)
+    .join(" repo:");
 };
 
 /**
